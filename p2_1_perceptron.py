@@ -1,5 +1,35 @@
-from cv2 import randn
+from cProfile import label
+from turtle import color
 import numpy as np
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def load_data():
+    s = 'https://archive.ics.uci.edu/ml/'\
+    'machine-learning-databases/iris/iris.data'
+    print('From URL:', s)
+    df = pd.read_csv(s, header=None, encoding='utf-8')
+    print (df.tail())
+
+    return df
+
+def extr_data_plot():
+    df = load_data()
+    # select setosa and versicolor
+    y = df.iloc[0:100, 4].values
+    y = np.where(y == 'Iris-setosa', 0, 1)
+    # extract sepal length and petal length
+    X = df.iloc[0:100, [0, 2]].values
+    # plot data
+    plt.scatter(X[:50, 0], X[:50, 1], color='red', marker='o', label='Setosa')
+    plt.scatter(X[50:100, 0], X[50:100, 1], color='blue', marker='s', label='Versicolor')
+    plt.xlabel('Sepal length [cm]')
+    plt.ylabel('Petal length [cm]')
+    plt.legend(loc='upper left')
+    plt.show()
+    
+
 
 class Perceptron:
     """Perceptron classifier.
@@ -61,3 +91,6 @@ class Perceptron:
     def predict(self, X):
         """Return class label after unit step"""
         return np.where(self.net_input(X) >= 0.0, 1, 0)
+
+if __name__ == '__main__':
+    extr_data_plot()
